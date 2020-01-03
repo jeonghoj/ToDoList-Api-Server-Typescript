@@ -1,0 +1,9 @@
+diff: true
+spec:
+  - './src/**/*Test.ts'
+package: './package.json'
+slow: 75
+timeout: 2000
+ui: 'bdd'
+require: 'ts-node/register'
+reporter: spec

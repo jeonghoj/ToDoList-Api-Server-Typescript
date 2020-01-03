@@ -12,7 +12,7 @@ const app = express();
 const exit = process.exit;
 
 export default class ExpressServer {
-  private routes: (app: Application) => void;
+  private routes!: (app: Application) => void;
   constructor() {
     const root = path.normalize(__dirname + '/../..');
     app.set('appPath', root + 'client');
@@ -40,7 +40,8 @@ export default class ExpressServer {
           'development'} @: ${os.hostname()} on port: ${p}}`
       );
 
-    installValidator(app, this.routes).then(() => {
+    installValidator(app, this.routes)
+      .then(() => {
         http.createServer(app).listen(port, welcome(port));
       })
       .catch(e => {

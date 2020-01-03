@@ -10,10 +10,9 @@ dotenv.config({ path: '../../.env' });
 
 describe('Sequelize Init Test', () => {
   // const sequelize = new Sequelize(process.env.DB_HOST);
-  const sequelize = new Sequelize(
-    'mysql://root:password@localhost:3308/todolist'
-  );
+  let sequelize: Sequelize;
   before(async () => {
+    sequelize = new Sequelize('mysql://root:password@localhost:3308/todolist');
     taskModelInitialize(sequelize);
     userModelInitialize(sequelize);
     await sequelize.authenticate();
@@ -37,7 +36,7 @@ describe('Sequelize Init Test', () => {
       });
   });
 
-  afterEach(async () => {
-    await sequelize.close();
-  });
+  // afterEach(async () => {
+  //   await sequelize.close();
+  // });
 });
