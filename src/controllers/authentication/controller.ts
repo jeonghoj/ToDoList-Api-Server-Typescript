@@ -1,13 +1,21 @@
 import UsersService from '../../component/users/usersService';
 import { Request, Response } from 'express';
 import logger from '../../config/logger';
+import * as jwt from 'jsonwebtoken';
 
 export class Controller {
   async register(req: Request, res: Response): Promise<void> {
     const { username, password } = req.body;
     try {
-      const token = await UsersService.register(username, password);
-      if (token !== null) {
+      const createdUser = await UsersService.register(username, password);
+      if (createdUser !== null) {
+        const token = jwt.sign(
+          {
+            id: createdUser.id,
+            username: createdUser.username,
+          },
+          process.env.TOKEN_SECRET
+        );
         res.status(201).json({
           data: token,
           msg: 'Register Success',
@@ -26,8 +34,15 @@ export class Controller {
   }
   async login(req: Request, res: Response): Promise<void> {
     const { username, password } = req.body;
-    const token = await UsersService.auth(username, password);
-    if (token) {
+    const user = await UsersService.auth(username, password);
+    if (user) {
+      const token = jwt.sign(
+        {
+          id: user.id,
+          username: user.username,
+        },
+        process.env.TOKEN_SECRET
+      );
       res.json({
         data: token,
         msg: 'Login Success',

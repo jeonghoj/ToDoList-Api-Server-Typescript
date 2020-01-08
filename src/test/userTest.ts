@@ -7,7 +7,7 @@ import { taskModelInitialize } from '../component/tasks/taskDAL';
 
 import * as dotenv from 'dotenv';
 import usersService from '../component/users/usersService';
-import logger from '../config/logger';
+
 dotenv.config({ path: '../../.env' });
 
 describe('UsersService create User Test', () => {
@@ -29,25 +29,33 @@ describe('UsersService create User Test', () => {
   });
 
   it('should create user', async () => {
-    const result = await usersService.register(user.username, user.password);
-    expect(result?.username).to.be.equal(user.username);
-    expect(result?.validPassword(user.password)).equal(true);
+    try {
+      const result = await usersService.register(user.username, user.password);
+      expect(result?.username).to.be.equal(user.username);
+      expect(result?.validPassword(user.password)).equal(true);
+    } catch (e) {
+      throw new Error(e);
+    }
   });
 
   it('check if duplicate user', async () => {
     usersService.register(user.username, user.password).then(r => {
-      logger.info(`${r}`);
       assert.isNull(r);
     });
   });
 
   it('login user', async () => {
-    const token = await usersService.auth(user.username, user.password);
-    logger.info(`${token}`);
-    assert.isNotNull(token);
+    try {
+      const loginUser = await usersService.auth(user.username, user.password);
+      assert.isNotNull(loginUser);
+      expect(loginUser.username).to.be.equal(user.username);
+      expect(loginUser.validPassword(user.password)).to.be.equal(true);
+    } catch (e) {
+      throw new Error(e);
+    }
   });
 
-  // afterEach(async () => {
-  //   await sequelize.close();
-  // });
+  after(async () => {
+    await sequelize.close();
+  });
 });

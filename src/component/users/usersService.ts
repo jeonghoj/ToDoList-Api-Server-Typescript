@@ -5,12 +5,12 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export class UsersService {
-  async register(username: string, password: string): Promise<string> {
+  async register(username: string, password: string): Promise<User> {
     try {
-      const userExist = await User.findOne({ where: { username } });
+      const userExist = await User.findOne({ where: { username }, raw: true });
       if (!userExist) {
         const createdUser = await User.create({ username, password });
-        return jwt.sign(createdUser.toJSON(), process.env.TOKEN_SECRET!);
+        return createdUser;
       } else {
         return null;
       }
@@ -20,12 +20,11 @@ export class UsersService {
     }
   }
 
-  async auth(username: string, password: string): Promise<string | null> {
+  async auth(username: string, password: string): Promise<User> {
     const userExist = await User.findOne({ where: { username } });
     if (userExist) {
-      if (await userExist.validPassword(password)) {
-        const token = jwt.sign(userExist.toJSON(), process.env.TOKEN_SECRET!);
-        return token;
+      if (userExist.validPassword(password)) {
+        return userExist;
       } else {
         return null;
       }
