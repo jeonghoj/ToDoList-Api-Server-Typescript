@@ -1,0 +1,243 @@
+openapi: 3.0.1
+info:
+  title: ToDoList-Api-Server-Typescript
+  description: ToDoList-Api-Server-Typescript
+  version: 1.0.0
+servers:
+  - url: /
+tags:
+  - name: users
+    description: 유저 기능
+  - name: tasks
+    description: 할 일 CRUD 기능
+  - name: Specification
+    description: The swagger API specification
+paths:
+  /spec:
+    get:
+      tags:
+        - Specification
+      responses:
+        200:
+          description: Return the API specification
+  /api-docs:
+    get:
+      tags:
+        - Specification
+      responses:
+        200:
+          description: Return the API specification
+  /auth/register:
+    post:
+      tags:
+        - users
+      description: 회원가입
+      requestBody:
+        description: 회원 아이디, 비밀번호 요청
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/authReq'
+        required: true
+      responses:
+        '201':
+          description: 회원 가입 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authRes'
+  /auth/login:
+    post:
+      tags:
+        - users
+      description: 로그인
+      requestBody:
+        description: 회원 아이디, 비밀번호 요청
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/authReq'
+        required: true
+      responses:
+        200:
+          description: 회원 로그인 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authRes'
+        401:
+          description: Unauthorized
+  /task:
+    get:
+      tags:
+        - tasks
+      description: 할 일 요청
+      responses:
+        200:
+          description: 할 일 가져오기
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getTasks'
+    post:
+      tags:
+        - tasks
+      description: 할 일 생성
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createTaskReq'
+        required: true
+      responses:
+        200:
+          description: 생성한 할 일 id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createTaskRes'
+  /task/{id}:
+    get:
+      tags:
+        - tasks
+      description: 할 일 가져오기
+      responses:
+        200:
+          description: 할 일 응답
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getTask'
+    put:
+      tags:
+        - tasks
+      description: 할 일 수정
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/modifyTaskReq'
+      responses:
+        200:
+          description: 할 일 수정 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/modifyTaskRes'
+        404:
+          description: 할 일 수정 실패
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/modifyTaskRes'
+    delete:
+      tags:
+        - tasks
+      description: 할 일 삭제
+      responses:
+        200:
+          description: 할 일 삭제 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deleteTask'
+
+
+
+components:
+  schemas:
+    authReq:
+      title: 아이디 비밀번호 요청
+      required:
+        - username
+        - password
+      type: object
+      properties:
+        username:
+          type: string
+          maxLength: 30
+        password:
+          type: string
+          format: password
+          maxLength: 30
+    authRes:
+      title: 토큰 응답
+      type: object
+      properties:
+        data:
+          type: string
+          maxLength: 200
+        msg:
+          type: string
+          maxLength: 200
+    getTasks:
+      title: 할일 리스트
+      type: object
+      properties:
+        data:
+          type: array
+    getTask:
+      title: 할 일
+      type: object
+      properties:
+        data:
+          type: object
+    createTaskReq:
+      title: 할 일 생성
+      type: object
+      required:
+        - content
+        - targetDate
+        - isCompleted
+      properties:
+        content:
+          type: string
+          maxLength: 500
+        targetDate:
+          type: string
+        isCompleted:
+          type: boolean
+    createTaskRes:
+      title: 할 일 생성 응답
+      type: object
+      properties:
+        data:
+          properties:
+            id:
+              type: number
+    modifyTaskReq:
+      title: 할일 수정 요청
+      type: object
+      required:
+        - content
+        - targetDate
+        - isCompleted
+      properties:
+        data:
+          properties:
+            content:
+              type: string
+            targetDate:
+              type: string
+            isCompeted:
+              type: boolean
+    modifyTaskRes:
+      title: 할일 수정 응답
+      type: object
+      properties:
+        data:
+          type: number
+    modifyTask404Res:
+      title: 할일 수정 찾을 수 없음
+      type: object
+      properties:
+        data:
+          type: number
+        msg:
+          type: string
+    deleteTask:
+      title: 할일 삭제 응답
+      type: object
+      properties:
+        data:
+          type: number

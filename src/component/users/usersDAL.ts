@@ -1,9 +1,5 @@
 import { Sequelize, Model, DataTypes } from 'sequelize';
-import {
-  Association,
-  HasManyGetAssociationsMixin,
-  HasManyAddAssociationMixin,
-} from 'sequelize';
+import { Association, HasManyGetAssociationsMixin } from 'sequelize';
 import * as bcrypt from 'bcrypt-nodejs';
 
 import { Task } from '../tasks/taskDAL';
@@ -18,7 +14,6 @@ export class User extends Model {
   }
 
   public getTasks!: HasManyGetAssociationsMixin<Task>;
-  public addProduct!: HasManyAddAssociationMixin<Task, number>;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;

@@ -42,7 +42,7 @@ describe('UsersService create User Test', () => {
   });
 
   it('login user', async () => {
-    const token = await usersService.authorize(user.username, user.password);
+    const token = await usersService.auth(user.username, user.password);
     logger.info(`${token}`);
     assert.isNotNull(token);
   });

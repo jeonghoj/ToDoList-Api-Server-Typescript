@@ -3,8 +3,11 @@ import express, { Application } from 'express';
 import errorHandler from '../middlewares/error.handler';
 import { OpenApiValidator } from 'express-openapi-validator';
 
-export default function (app: Application, routes: (app: Application) => void): Promise<void> {
-  const apiSpec = path.join(__dirname, 'api.yml');
+export default function(
+  app: Application,
+  routes: (app: Application) => void
+): Promise<void> {
+  const apiSpec = path.join(__dirname, 'openapi.yaml');
   const validateResponses = !!(
     process.env.OPENAPI_ENABLE_RESPONSE_VALIDATION &&
     process.env.OPENAPI_ENABLE_RESPONSE_VALIDATION.toLowerCase() === 'true'
@@ -15,8 +18,8 @@ export default function (app: Application, routes: (app: Application) => void): 
   })
     .install(app)
     .then(() => {
-      app.use(process.env.OPENAPI_SPEC || '/spec', express.static(apiSpec));
+      app.use(process.env.OPENAPI_SPEC || 'spec', express.static(apiSpec));
       routes(app);
       app.use(errorHandler);
     });
-};
+}

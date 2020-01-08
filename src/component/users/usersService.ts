@@ -1,31 +1,29 @@
 import logger from '../../config/logger';
 import { User } from './usersDAL';
-import UserErrorHandler from './userErrorHandler';
 import * as jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
 
 export class UsersService {
-  async register(username: string, password: string): Promise<User | null> {
+  async register(username: string, password: string): Promise<string> {
     try {
       const userExist = await User.findOne({ where: { username } });
       if (!userExist) {
-        return await User.create({ username, password });
+        const createdUser = await User.create({ username, password });
+        return jwt.sign(createdUser.toJSON(), process.env.TOKEN_SECRET!);
       } else {
         return null;
       }
     } catch (e) {
       logger.error(e);
-      new UserErrorHandler(500, 'DB Error');
       return null;
     }
   }
 
-  async authorize(username: string, password: string): Promise<string | null> {
+  async auth(username: string, password: string): Promise<string | null> {
     const userExist = await User.findOne({ where: { username } });
     if (userExist) {
       if (await userExist.validPassword(password)) {
-        logger.info(process.env.TOKEN_SECRET!);
         const token = jwt.sign(userExist.toJSON(), process.env.TOKEN_SECRET!);
         return token;
       } else {
@@ -36,13 +34,13 @@ export class UsersService {
     }
   }
 
-  async getUserById(username: string): Promise<User | null> {
+  async getUser(userId: number): Promise<User | null> {
     try {
-      const getUser = await User.findOne({ where: { username } });
-      return getUser;
+      const user = await User.findOne({ where: { id: userId }, raw: true });
+      return user;
     } catch (e) {
       logger.error(e);
-      throw new UserErrorHandler(500, 'DB Error');
+      return null;
     }
   }
 }

@@ -3,15 +3,17 @@ import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import UsersService from '../component/users/usersService';
 import logger from './logger';
 
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace Express {
+    interface User {
+      id: number;
+      username: string;
+    }
+  }
+}
+
 export default (): void => {
-  passport.serializeUser((user, done) => {
-    done(null, user);
-  });
-
-  passport.deserializeUser((user, done) => {
-    done(null, user);
-  });
-
   passport.use(
     new JwtStrategy(
       {
@@ -20,9 +22,12 @@ export default (): void => {
       },
       async (jwtPayload, done): Promise<void> => {
         try {
-          const user = await UsersService.getUserById(jwtPayload.id);
-          if (user) {
-            return done(null, user);
+          const user = await UsersService.getUser(jwtPayload.id);
+          if (user !== null) {
+            return done(null, {
+              id: user.id,
+              username: user.username,
+            });
           } else {
             return done(null, false);
           }
