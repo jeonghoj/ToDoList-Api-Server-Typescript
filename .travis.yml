@@ -1,0 +1,38 @@
+language: nodejs
+node_js:
+- 12
+branches:
+  only:
+  - master
+cache: yarn
+before_install:
+- openssl aes-256-cbc -K $encrypted_b419ef440b99_key -iv $encrypted_b419ef440b99_iv
+  -in .env.enc -out .env -d
+
+before_script:
+- yarn install
+- yarn test
+
+script: yarn compile
+
+notifications:
+  email:
+    recipients:
+      - jjhh3079@gmail.com
+
+before_deploy:
+  - zip -r todolist-api-server-typescript *
+  - mkdir -p todolist-api-server-typescript
+  - mv todolist-api-server-typescript.zip deploy/todolist-api-server-typescript.zip
+
+deploy:
+- provider: s3
+  access_key_id: "$AWS_ACCESS_KEY"
+  secret_access_key: "$AWS_SECRET_KEY"
+  bucket: spring-communityboard-deploy
+  region: ap-northeast-2
+  skip_cleanup: true
+  local_dir: todolist-api-server-typescript
+  on:
+    repo: jeonghoj/ToDoList-Api-Server-Typescript
+    branch: master
