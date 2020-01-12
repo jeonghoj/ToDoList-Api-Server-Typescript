@@ -192,12 +192,21 @@ components:
       properties:
         data:
           type: array
+          items:
+            $ref: '#/components/schemas/getTask'
     getTask:
       title: 할 일
       type: object
       properties:
         data:
           type: object
+          properties:
+            content:
+              type: string
+            targetDate:
+              type: string
+            isCompleted:
+              type: boolean
     createTaskReq:
       title: 할 일 생성
       type: object
