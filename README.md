@@ -1,4 +1,4 @@
-# ToDoList-Api-Server-Typescript
+# ToDoList-Api-Server-Typescript [![Build Status](https://travis-ci.org/jeonghoj/ToDoList-Api-Server-Typescript.svg?branch=master)](https://github.com/jeonghoj/ToDoList-Api-Server-Typescript)
 
 Express Framework 와 Typescript 를 사용한 ToDoList-Api-Server.
 
