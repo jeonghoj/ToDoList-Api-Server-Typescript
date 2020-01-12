@@ -10,7 +10,7 @@ import usersService from '../component/users/usersService';
 
 dotenv.config({ path: '../../.env' });
 
-describe('UsersService create User Test', () => {
+describe('UsersService create User Test', async () => {
   let sequelize: Sequelize;
 
   const user = {

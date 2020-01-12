@@ -22,8 +22,8 @@ describe('Authentication Controller Test', async () => {
     });
   });
 
-  it('User Register / Login Test', () => {
-    request(app)
+  it('User Register / Login Test', async () => {
+    await request(app)
       .post('/auth/register')
       .send({
         username: 'jj',
@@ -36,7 +36,7 @@ describe('Authentication Controller Test', async () => {
           .to.be.an('object')
           .that.has.property('data');
       });
-    request(app)
+    await request(app)
       .post('/auth/login')
       .send({
         username: 'jj',
