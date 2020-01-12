@@ -11,9 +11,7 @@ import logger from '../config/logger';
 
 describe('Authentication Controller Test', async () => {
   const app = await new Server().router(routes).installValidator();
-  const sequelize: Sequelize = new Sequelize(
-    'mysql://root:password@localhost:3308/todolist'
-  );
+  const sequelize: Sequelize = new Sequelize(process.env.DB_HOST);
 
   before(async () => {
     taskModelInitialize(sequelize);

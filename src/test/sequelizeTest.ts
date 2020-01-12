@@ -12,7 +12,7 @@ describe('Sequelize Init Test', () => {
   // const sequelize = new Sequelize(process.env.DB_HOST);
   let sequelize: Sequelize;
   before(async () => {
-    sequelize = new Sequelize('mysql://root:password@localhost:3308/todolist');
+    sequelize = new Sequelize(process.env.DB_HOST);
     taskModelInitialize(sequelize);
     userModelInitialize(sequelize);
     await sequelize.authenticate();

@@ -9,7 +9,7 @@ import logger from './config/logger';
 import * as http from 'http';
 import os from 'os';
 
-const port = parseInt(process.env.PORT!);
+const port = parseInt(process.env.PORT);
 
 const stopServer = async (
   server: http.Server,
