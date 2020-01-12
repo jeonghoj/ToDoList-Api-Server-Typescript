@@ -8,23 +8,17 @@ cache: yarn
 before_install:
 - openssl aes-256-cbc -K $encrypted_b419ef440b99_key -iv $encrypted_b419ef440b99_iv
   -in .env.enc -out .env -d
-
 before_script:
 - yarn install
-- yarn test
-
-script: yarn compile
-
+- yarn compile
+script: yarn test
 notifications:
-  email:
-    recipients:
-      - jjhh3079@gmail.com
-
+  slack:
+    secure: fDVuE/ogqohCuofK1oDcTkvSE5L0YJrs3xUxUjpwPnzllYrxU4o2raVJsmpDFY2arP3hCsgSuIRfiBk5hC18bFbj1Y2tyKaXRRj2oFQ77zbiC4Lli23FoQtAzuE0IpD7Kfk4gRwUh9HPsUzRxzwFsMLKb7qA2fKYitszlhNREwbfJjtowozr1zayOS/l7+CSzq5HP6jXcW2RANg+cLT2uyxO+vsfxUFqa4ooJTajevzK/9kSTBd8KoThAoYMCMdDwt++eUPIcmxuyzMSbRM0Dyhch7Vlbg6Kz11kyDPMqrQDo5ZTCBYON7UKNu52VMR+ru2xh9b7T7FoaYeYCa8Ol1qHSDc9bfx6KBdWZMPq2CiuObpQkscJ/1Lyjv/5tLm5z1RVu5xWhtOYc5ewgUpnQlZ9YZ/ONpX0fJgEEGO3u26k5wgon4pvHJDjkpLHIP2JDNnq0Pveb/R+htPLgvSu1aP9gsnUt1X/uLlEZBku+/Y3De/4zi0QcqglIfSZp7Ww4+OQOvRKWxtNPhkJyxLR6w3Rwtko9oj2bDJ1ytG1F4bWUwRP9sSurvlGTPvKtVRMsw/Q+AoDzVg/6KC0NjQaiF0x+ilR9hBjaXlUiH9yjsi/wOQmglxdGCM7BVi4+861zxyFqJxt/B+tBbwKliaSHrEuj3CIQ1sPOOwHwJVgubE=
 before_deploy:
-  - zip -r todolist-api-server-typescript *
-  - mkdir -p todolist-api-server-typescript
-  - mv todolist-api-server-typescript.zip deploy/todolist-api-server-typescript.zip
-
+- zip -r todolist-api-server-typescript *
+- mkdir -p todolist-api-server-typescript
+- mv todolist-api-server-typescript.zip deploy/todolist-api-server-typescript.zip
 deploy:
 - provider: s3
   access_key_id: "$AWS_ACCESS_KEY"
